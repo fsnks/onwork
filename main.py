@@ -93,11 +93,11 @@ def captcha():
         session['ins'] = userdomain
         return render_template('captcha.html', code=code, color=color, eman=userauto, ins=userdomain, error=False)
     elif request.method != 'GET':
-        user_input = request.form['code']
+		user_input = request.form['code']
         if 'code' in session and user_input == session['code']:
-            # User input matches the code, set the flag and redirect to success page
-            session['passed_captcha'] = True
-            return redirect(url_for('success'))
+		# User input matches the code, set the flag and redirect to success page
+		session['passed_captcha'] = True
+	return redirect(url_for('success'))
         else:
             # User input does not match the code, generate a new code and render the CAPTCHA page with an error message
             code = random.randint(1000, 9999)
