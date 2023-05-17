@@ -77,7 +77,7 @@ bot_user_agents = [
 
 @app.route('/', methods=['GET', 'POST'])
 def captcha():
-	    if request.method == 'GET':
+    if request.method == 'GET':
         if 'passed_captcha' in session and session['passed_captcha']:
             # CAPTCHA has already been passed, redirect to success page
             return redirect(url_for('success'))
@@ -106,6 +106,7 @@ def captcha():
             session['code'] = str(code)
 
             return render_template('captcha.html', code=code, color=color, error=True)
+
 
 @app.route('/success')
 def success():
