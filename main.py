@@ -99,7 +99,7 @@ def captcha():
 
         user_input = request.form['code']
 
-        if user_input == session['code']:
+        if user_input == session['code'].strip():
             
             # User input matches the code, set the flag and redirect to success page
             session['passed_captcha'] = True
