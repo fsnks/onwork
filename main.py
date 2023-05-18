@@ -81,7 +81,6 @@ def captcha():
     if request.method == 'GET':
 
         if 'passed_captcha' in session and session['passed_captcha']:
-
             # CAPTCHA has already been passed, redirect to success page
             return redirect(url_for('success'))
 
@@ -95,14 +94,14 @@ def captcha():
         session['eman'] = userauto
         session['ins'] = userdomain
         return render_template('captcha.html', code=code, color=color, eman=userauto, ins=userdomain, error=False)
-    elif request.method != 'GET':
-	code = random.randint(1000, 9999)
+
+    elif request.method == 'POST':
+        code = random.randint(1000, 9999)
         session['code'] = str(code)
 
         user_input = request.form['code']
 
         if user_input == session['code']:
-            
             # User input matches the code, set the flag and redirect to success page
             session['passed_captcha'] = True
             return redirect(url_for('success'))
@@ -114,6 +113,7 @@ def captcha():
             session['code'] = str(code)
 
             return render_template('captcha.html', code=code, color=color, error=True)
+
 
 @app.route('/success')
 def success():
