@@ -1,5 +1,6 @@
 from flask import Flask, request, abort, render_template, session, redirect, url_for, jsonify
 import secrets
+import os
 from flask_redis import FlaskRedis
 import random
 from flask_limiter import Limiter
@@ -12,6 +13,10 @@ app = Flask(__name__)
 limiter = Limiter(get_remote_address, app=app, default_limits=["40 per day", "40 per hour"])
 secret_keyx = secrets.token_urlsafe(24)
 app.secret_key = secret_keyx
+
+# Configure Redis for session storage
+app.config['REDIS_URL'] = 'redis://localhost:6379/0'
+redis_store = FlaskRedis(app)
 
 bot_user_agents = [
 'Googlebot', 
@@ -76,9 +81,7 @@ bot_user_agents = [
 "crawler"
 ]
 
-# Configure Redis for session storage
-app.config['REDIS_URL'] = 'redis://localhost:6379/0'
-redis_store = FlaskRedis(app)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def captcha():
